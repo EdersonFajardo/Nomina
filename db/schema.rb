@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_14_160000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_08_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -77,6 +77,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_14_160000) do
     t.index ["user_id"], name: "index_documents_on_user_id"
   end
 
+  create_table "email_accounts", force: :cascade do |t|
+    t.text "access_token"
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "history_id"
+    t.text "last_sync_error"
+    t.datetime "last_synced_at"
+    t.string "provider", default: "gmail", null: false
+    t.text "refresh_token"
+    t.string "scopes"
+    t.string "sync_status", default: "pending", null: false
+    t.datetime "token_expires_at"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id", "email"], name: "index_email_accounts_on_user_id_and_email", unique: true
+    t.index ["user_id"], name: "index_email_accounts_on_user_id"
+  end
+
   create_table "employees", force: :cascade do |t|
     t.string "address", default: "BOGOTA", null: false
     t.bigint "company_id", null: false
@@ -114,5 +132,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_14_160000) do
   add_foreign_key "conversion_logs", "companies"
   add_foreign_key "conversion_logs", "users"
   add_foreign_key "documents", "users"
+  add_foreign_key "email_accounts", "users"
   add_foreign_key "employees", "companies"
 end

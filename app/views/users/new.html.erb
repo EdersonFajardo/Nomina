@@ -1,0 +1,15 @@
+<div class="max-w-xl mx-auto">
+  <div class="mb-6">
+    <%= link_to users_path, class: "inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700" do %>
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+      <%= t("users.back") %>
+    <% end %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <h1 class="text-xl font-bold text-gray-900 mb-6"><%= t("users.new_title") %></h1>
+    <%= render "form", user: @user %>
+  </div>
+</div>

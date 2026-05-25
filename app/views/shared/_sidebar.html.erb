@@ -9,6 +9,7 @@
     <%= sidebar_link t("sidebar.employees"), employees_path, active: request.path.start_with?("/employees") %>
     <%= sidebar_link t("sidebar.users"), users_path, active: current_page?(users_path) %>
     <%= sidebar_link t("sidebar.documents"), documents_path, active: current_page?(documents_path) %>
+    <%= sidebar_link t("sidebar.email_accounts"), email_accounts_path, active: request.path.start_with?("/email_accounts") %>
     <%= sidebar_link t("sidebar.conversion_logs"), conversion_logs_path, active: current_page?(conversion_logs_path) %>
     <%= sidebar_link t("sidebar.payroll_archives"), payroll_archives_path, active: current_page?(payroll_archives_path) %>
     <%= sidebar_link t("sidebar.period_reports"), period_reports_path, active: current_page?(period_reports_path) %>

@@ -13,6 +13,7 @@ es:
     employees: "Empleados"
     users: "Usuarios"
     documents: "Documentos"
+    email_accounts: "Gestion de correos"
     payroll_archives: "Archivo Nominas"
     period_reports: "Reporte Periodos"
     conversion_logs: "Registro Conversiones"
@@ -229,6 +230,65 @@ es:
       bank_name: "Banco"
       bank_account: "Numero de Cuenta"
       status: "Estado"
+  users:
+    index:
+      title: "Usuarios"
+      description: "Gestiona los usuarios que tienen acceso al sistema."
+    new_title: "Nuevo Usuario"
+    edit_title: "Editar Usuario"
+    new_button: "Nuevo Usuario"
+    back: "Volver a usuarios"
+    cancel: "Cancelar"
+    created: "Usuario creado exitosamente."
+    updated: "Usuario actualizado exitosamente."
+    deleted: "Usuario eliminado exitosamente."
+    confirm_delete: "Esta seguro que desea eliminar este usuario?"
+    cannot_delete_self: "No puede eliminar su propio usuario."
+    fields:
+      email: "Correo electronico"
+      password: "Contrasena"
+      password_confirmation: "Confirmar contrasena"
+      created_at: "Fecha de creacion"
+      actions: "Acciones"
+    placeholders:
+      email: "usuario@ejemplo.com"
+    hints:
+      password_min: "Minimo %{count} caracteres."
+      password_optional: "Dejar en blanco para mantener la contrasena actual."
+    actions:
+      edit: "Editar"
+      delete: "Eliminar"
+    empty:
+      title: "Sin usuarios"
+      description: "Comience creando un nuevo usuario."
+  email_accounts:
+    index:
+      title: "Gestion de correos"
+      description: "Vincula cuentas de Gmail para ver y responder correos desde un solo lugar."
+    connect_button: "Vincular cuenta de Gmail"
+    deleted: "Cuenta desvinculada exitosamente."
+    confirm_delete: "Esta seguro que desea desvincular la cuenta %{email}?"
+    fields:
+      email: "Correo"
+      provider: "Proveedor"
+      status: "Estado de sincronizacion"
+      last_synced_at: "Ultima sincronizacion"
+      actions: "Acciones"
+    status:
+      pending: "Pendiente"
+      syncing: "Sincronizando"
+      ok: "Sincronizada"
+      error: "Error"
+    actions:
+      disconnect: "Desvincular"
+    connect:
+      success: "Cuenta %{email} vinculada exitosamente."
+      cancelled: "Vinculacion cancelada (%{error})."
+      invalid_state: "La sesion de vinculacion expiro o no es valida. Intenta de nuevo."
+      failed: "No se pudo completar la vinculacion. Verifica las credenciales y permisos."
+    empty:
+      title: "Sin cuentas vinculadas"
+      description: "Vincula tu primera cuenta de Gmail para empezar a recibir correos aqui."
   sessions:
     title: "Nomina"
     subtitle: "Inicia sesion en tu cuenta"

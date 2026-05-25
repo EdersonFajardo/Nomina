@@ -1,0 +1,74 @@
+<div class="max-w-4xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900"><%= t("email_accounts.index.title") %></h1>
+      <p class="mt-1 text-gray-600"><%= t("email_accounts.index.description") %></p>
+    </div>
+    <%= button_to connect_email_accounts_path, method: :get,
+        class: "inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 transition-colors cursor-pointer" do %>
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      <%= t("email_accounts.connect_button") %>
+    <% end %>
+  </div>
+
+  <% if @email_accounts.any? %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("email_accounts.fields.email") %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("email_accounts.fields.provider") %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("email_accounts.fields.status") %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("email_accounts.fields.last_synced_at") %></th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("email_accounts.fields.actions") %></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @email_accounts.each do |account| %>
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center justify-center w-8 h-8 rounded-full bg-red-100 text-red-700 text-sm font-medium">
+                    <%= account.email[0].upcase %>
+                  </div>
+                  <span><%= account.email %></span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600"><%= account.provider.capitalize %></td>
+              <td class="px-6 py-4 text-sm">
+                <% case account.sync_status
+                   when "ok" %>
+                  <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800"><%= t("email_accounts.status.ok") %></span>
+                <% when "syncing" %>
+                  <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"><%= t("email_accounts.status.syncing") %></span>
+                <% when "error" %>
+                  <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800"><%= t("email_accounts.status.error") %></span>
+                <% else %>
+                  <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700"><%= t("email_accounts.status.pending") %></span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">
+                <%= account.last_synced_at ? l(account.last_synced_at, format: :short) : "—" %>
+              </td>
+              <td class="px-6 py-4 text-sm text-right">
+                <%= link_to t("email_accounts.actions.disconnect"), account,
+                    data: { turbo_method: :delete, turbo_confirm: t("email_accounts.confirm_delete", email: account.email) },
+                    class: "text-red-600 hover:text-red-800 font-medium" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+      <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900"><%= t("email_accounts.empty.title") %></h3>
+      <p class="mt-1 text-sm text-gray-500"><%= t("email_accounts.empty.description") %></p>
+    </div>
+  <% end %>
+</div>

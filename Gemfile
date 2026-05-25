@@ -14,6 +14,7 @@ gem "simple_form"
 gem "bcrypt", "~> 3.1.7"
 gem "devise"
 gem "roo", "~> 2.10"
+gem "google-apis-gmail_v1", "~> 0.30"
 
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 

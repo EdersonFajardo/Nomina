@@ -121,21 +121,38 @@ module Converters
       nil
     end
 
+    # Functions live below the header until the risk section. The layout varies:
+    # some sheets pack every function into a single multiline cell, others use one
+    # row per function. Collecting every non-empty cell in the range handles both.
+    # Column A = own functions, column B = SIG responsibilities.
     def extract_functions(sheet)
       header = (1..MAX_ROW).find do |row|
         norm(txt(sheet, row, 1)).include?("FUNCIONES Y RESPONSABILIDADES PROPIAS")
       end
       return [nil, nil] unless header
 
-      content_row = ((header + 1)..(header + 6)).find do |row|
-        txt(sheet, row, 1).strip.length > 30
-      end
-      return [nil, nil] unless content_row
+      stop = ((header + 1)..MAX_ROW).find do |row|
+        norm(txt(sheet, row, 1)).include?("CONDICIONES Y RIESGOS")
+      end || (header + 20)
 
-      own = txt(sheet, content_row, 1).strip.presence
-      sig = txt(sheet, content_row, 2).strip
-      sig = nil if sig.length <= 15
-      [own, sig]
+      own_lines = []
+      sig_lines = []
+      ((header + 1)...stop).each do |row|
+        a = txt(sheet, row, 1).strip
+        b = txt(sheet, row, 2).strip
+        own_lines << a if a.present? && !section_header?(a)
+        sig_lines << b if b.present? && !section_header?(b)
+      end
+
+      [own_lines.join("\n").presence, sig_lines.join("\n").presence]
+    end
+
+    # Stray section headers (e.g. "RESPONSABILIDADES CON EL SGI") sometimes sit
+    # inside the functions range and must not be captured as content.
+    def section_header?(text)
+      n = norm(text)
+      n.include?("RESPONSABILIDADES CON EL S") ||
+        n.include?("FUNCIONES Y RESPONSABILIDADES PROPIAS")
     end
 
     def extract_metadata(sheet)

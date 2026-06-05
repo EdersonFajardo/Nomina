@@ -85,6 +85,9 @@ class JobProfilesController < ApplicationController
     message = t("job_profiles.import.success", created: created, updated: updated)
     message += " #{t('job_profiles.import.errors', count: errors.size)}" if errors.any?
     redirect_to company_job_profiles_path(@company), notice: message
+  rescue Zip::Error, ArgumentError, IOError => e
+    Rails.logger.error("Job profiles import - invalid file: #{e.message}")
+    redirect_to company_job_profiles_path(@company), alert: t("job_profiles.import.invalid_file")
   rescue StandardError => e
     Rails.logger.error("Job profiles import error: #{e.message}\n#{e.backtrace.first(5).join("\n")}")
     redirect_to company_job_profiles_path(@company), alert: t("job_profiles.import.failed")

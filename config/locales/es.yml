@@ -205,6 +205,7 @@ es:
       button: "Importar perfiles"
       no_file: "Debe seleccionar un archivo para importar."
       none_found: "No se encontraron perfiles validos en el archivo."
+      invalid_file: "El archivo no es un Excel valido (.xlsx). Verifique que no sea un archivo temporal (con prefijo .~ o ~$) y que no este abierto en otro programa."
       success: "%{created} perfil(es) creado(s), %{updated} actualizado(s)."
       errors: "%{count} error(es) durante la importacion."
       failed: "Ocurrio un error durante la importacion. Verifique el formato del archivo."

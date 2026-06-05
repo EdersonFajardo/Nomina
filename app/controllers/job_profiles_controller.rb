@@ -8,7 +8,12 @@ class JobProfilesController < ApplicationController
     @pagy, @job_profiles = pagy(profiles, limit: 20)
   end
 
-  def show; end
+  def show
+    @contracts = @job_profile.contracts
+                             .joins(:employee)
+                             .includes(:employee)
+                             .order("employees.first_surname, employees.first_name")
+  end
 
   def new
     @job_profile = @company.job_profiles.build

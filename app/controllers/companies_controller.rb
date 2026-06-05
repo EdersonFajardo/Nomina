@@ -25,7 +25,13 @@ class CompaniesController < ApplicationController
       employees = employees.where.not(id: active_ids)
     end
 
+    if params[:job_profile_id].present?
+      profiled_ids = Contract.where(job_profile_id: params[:job_profile_id]).select(:employee_id)
+      employees = employees.where(id: profiled_ids)
+    end
+
     employees = employees.order(:first_surname, :first_name)
+    @job_profiles = @company.job_profiles.order(:name)
     @pagy, @employees = pagy(employees, limit: 20)
   end
 

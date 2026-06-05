@@ -110,4 +110,53 @@
       </div>
     </dl>
   </div>
+
+  <%# Employees with this profile %>
+  <div class="mt-6">
+    <h2 class="text-sm font-semibold text-gray-700 mb-3">
+      <%= t("job_profiles.employees.title") %>
+      <span class="text-gray-400 font-normal">(<%= @contracts.size %>)</span>
+    </h2>
+    <% if @contracts.any? %>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("employees.fields.full_name") %></th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("employees.fields.document") %></th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("contracts.fields.contract_number") %></th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("contracts.fields.position") %></th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("employees.fields.status") %></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <% @contracts.each do |contract| %>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                  <%= link_to contract.employee.full_name, [@company, contract.employee], class: "text-indigo-600 hover:text-indigo-800" %>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-600">
+                  <span class="text-xs font-medium text-gray-400"><%= contract.employee.document_type_label %></span>
+                  <%= contract.employee.document_number %>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-600"><%= contract.contract_number.presence || t("contracts.no_number") %></td>
+                <td class="px-6 py-4 text-sm text-gray-600"><%= contract.position.presence || "-" %></td>
+                <td class="px-6 py-4 text-sm">
+                  <% if contract.active? %>
+                    <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20"><%= t("employees.filters.active") %></span>
+                  <% else %>
+                    <span class="inline-flex items-center rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-red-600/20"><%= t("employees.filters.inactive") %></span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+        <p class="text-sm text-gray-500"><%= t("job_profiles.employees.empty") %></p>
+      </div>
+    <% end %>
+  </div>
 </div>

@@ -115,11 +115,22 @@
         <option value="inactive" <%= "selected" if params[:status] == "inactive" %>><%= t("employees.filters.inactive", default: "Inactivo") %></option>
       </select>
     </div>
+    <% if @job_profiles.any? %>
+      <div>
+        <label class="block text-xs font-medium text-gray-500 mb-1"><%= t("employees.filters.job_profile") %></label>
+        <select name="job_profile_id" class="block rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none">
+          <option value=""><%= t("employees.filters.all_profiles") %></option>
+          <% @job_profiles.each do |profile| %>
+            <option value="<%= profile.id %>" <%= "selected" if params[:job_profile_id] == profile.id.to_s %>><%= profile.name %></option>
+          <% end %>
+        </select>
+      </div>
+    <% end %>
     <div class="flex items-center gap-2">
       <button type="submit" class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 transition-colors cursor-pointer">
         <%= t("employees.filters.apply", default: "Filtrar") %>
       </button>
-      <% if params[:q].present? || params[:status].present? %>
+      <% if params[:q].present? || params[:status].present? || params[:job_profile_id].present? %>
         <%= link_to t("employees.filters.clear", default: "Limpiar"), company_path(@company),
             class: "text-sm font-medium text-gray-600 hover:text-gray-800" %>
       <% end %>

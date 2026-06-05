@@ -215,6 +215,9 @@ es:
       confirm: "Asignar perfiles a los contratos por nombre de cargo?"
       success: "%{matched} contrato(s) emparejado(s). %{unmatched} sin coincidencia."
       none: "No hay contratos para emparejar."
+    employees:
+      title: "Empleados con este cargo"
+      empty: "Ningun empleado tiene este perfil de cargo asignado."
     manual:
       title: "Vincular contratos con perfiles"
       description: "Contratos sin perfil asignado. Abra cada uno, elija el perfil y guarde todo al final."
@@ -242,6 +245,8 @@ es:
       all: "Todos"
       active: "Activo"
       inactive: "Inactivo"
+      job_profile: "Perfil de cargo"
+      all_profiles: "Todos los perfiles"
       apply: "Filtrar"
       clear: "Limpiar"
     back: "Volver a empleados"

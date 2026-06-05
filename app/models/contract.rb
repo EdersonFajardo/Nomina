@@ -1,5 +1,6 @@
 class Contract < ApplicationRecord
   belongs_to :employee
+  belongs_to :job_profile, optional: true
 
   CONTRACT_TYPES = {
     1 => "Termino fijo",

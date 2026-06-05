@@ -1,5 +1,6 @@
 class Company < ApplicationRecord
   has_many :employees, dependent: :destroy
+  has_many :job_profiles, dependent: :destroy
 
   validates :name, presence: true
   validates :nit, presence: true, uniqueness: true

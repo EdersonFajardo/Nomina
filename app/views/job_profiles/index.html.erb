@@ -1,0 +1,139 @@
+<div class="max-w-5xl mx-auto">
+  <div class="mb-6">
+    <%= link_to company_path(@company), class: "inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700" do %>
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+      <%= t("job_profiles.back_to_company") %>
+    <% end %>
+  </div>
+
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900"><%= t("job_profiles.index.title") %></h1>
+      <p class="text-sm text-gray-500 mt-1"><%= t("job_profiles.index.description", company: @company.name) %></p>
+    </div>
+    <%= link_to new_company_job_profile_path(@company),
+        class: "inline-flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 transition-colors" do %>
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      <%= t("job_profiles.new_button") %>
+    <% end %>
+  </div>
+
+  <%# Import + assign section %>
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+    <h2 class="text-sm font-semibold text-gray-700 mb-3"><%= t("job_profiles.import.title") %></h2>
+    <p class="text-xs text-gray-500 mb-4"><%= t("job_profiles.import.description") %></p>
+    <%= form_with url: import_company_job_profiles_path(@company), method: :post, multipart: true,
+                  data: { controller: "import-employees", turbo: false, action: "submit->import-employees#submit" },
+                  class: "flex items-center gap-4" do %>
+      <input type="file" name="file" accept=".xlsx,.xls"
+             data-import-employees-target="fileInput"
+             data-action="change->import-employees#fileChanged"
+             class="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-md file:border-0
+                    file:text-sm file:font-medium
+                    file:bg-emerald-50 file:text-emerald-700
+                    hover:file:bg-emerald-100
+                    file:cursor-pointer" />
+      <button type="submit" disabled
+              data-import-employees-target="submitButton"
+              class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm
+                     hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2
+                     disabled:bg-gray-300 disabled:cursor-not-allowed disabled:shadow-none
+                     transition-colors whitespace-nowrap cursor-pointer">
+        <svg data-import-employees-target="buttonIcon" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+        </svg>
+        <svg data-import-employees-target="buttonSpinner" style="display:none;" class="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        <span data-import-employees-target="buttonText"><%= t("job_profiles.import.button") %></span>
+      </button>
+    <% end %>
+
+    <div class="border-t border-gray-200 mt-4 pt-4">
+      <p class="text-xs text-gray-500 mb-3"><%= t("job_profiles.assign.description") %></p>
+      <div class="flex items-center gap-3">
+        <%= button_to t("job_profiles.assign.button"), assign_to_contracts_company_job_profiles_path(@company),
+            method: :post,
+            form: { data: { turbo_confirm: t("job_profiles.assign.confirm") } },
+            class: "inline-flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-gray-300 hover:bg-gray-50 transition-colors cursor-pointer" %>
+        <%= link_to t("job_profiles.assign.manual_button"), manual_assignments_company_job_profiles_path(@company),
+            class: "inline-flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 transition-colors" %>
+      </div>
+    </div>
+  </div>
+
+  <%# Filter %>
+  <%= form_with url: company_job_profiles_path(@company), method: :get, local: true,
+                class: "bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4 flex flex-wrap items-end gap-4" do %>
+    <div class="flex-1 min-w-[200px]">
+      <label class="block text-xs font-medium text-gray-500 mb-1"><%= t("job_profiles.filters.search") %></label>
+      <input type="text" name="q" value="<%= params[:q] %>"
+             placeholder="<%= t("job_profiles.filters.search_placeholder") %>"
+             class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" />
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="submit" class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 transition-colors cursor-pointer">
+        <%= t("job_profiles.filters.apply") %>
+      </button>
+      <% if params[:q].present? %>
+        <%= link_to t("job_profiles.filters.clear"), company_job_profiles_path(@company),
+            class: "text-sm font-medium text-gray-600 hover:text-gray-800" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @job_profiles.any? %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("job_profiles.fields.code") %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("job_profiles.fields.name") %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("job_profiles.fields.immediate_boss") %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("job_profiles.fields.assigned_contracts") %></th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("job_profiles.fields.actions") %></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @job_profiles.each do |profile| %>
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 text-sm text-gray-500"><%= profile.code.presence || "-" %></td>
+              <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                <%= link_to profile.name, [@company, profile], class: "text-indigo-600 hover:text-indigo-800" %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600"><%= profile.immediate_boss.presence || "-" %></td>
+              <td class="px-6 py-4 text-sm text-gray-600"><%= profile.assigned_contracts_count %></td>
+              <td class="px-6 py-4 text-sm text-right space-x-3">
+                <%= link_to t("job_profiles.actions.edit"), edit_company_job_profile_path(@company, profile),
+                    class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
+                <%= link_to t("job_profiles.actions.delete"), [@company, profile],
+                    data: { turbo_method: :delete, turbo_confirm: t("job_profiles.confirm_delete") },
+                    class: "text-red-600 hover:text-red-800 font-medium" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-600">
+      <div class="text-xs text-gray-500"><%== pagy_info(@pagy) %></div>
+      <nav class="flex items-center gap-1"><%= tailwind_pagy_nav(@pagy) %></nav>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+      <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900"><%= t("job_profiles.empty.title") %></h3>
+      <p class="mt-1 text-sm text-gray-500"><%= t("job_profiles.empty.description") %></p>
+    </div>
+  <% end %>
+</div>

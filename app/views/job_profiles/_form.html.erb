@@ -1,0 +1,107 @@
+<%= form_with model: [@company, job_profile], class: "space-y-6" do |f| %>
+  <% if job_profile.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4">
+      <div class="flex">
+        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" />
+        </svg>
+        <div class="ml-3">
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-700">
+            <% job_profile.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Identification %>
+  <fieldset class="border border-gray-200 rounded-md p-4">
+    <legend class="text-sm font-semibold text-gray-700 px-2"><%= t("job_profiles.form.identification") %></legend>
+    <div class="grid grid-cols-2 gap-4 mt-2">
+      <div>
+        <%= f.label :name, t("job_profiles.fields.name"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :name, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+      </div>
+      <div>
+        <%= f.label :code, t("job_profiles.fields.code"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :code, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+      </div>
+      <div>
+        <%= f.label :immediate_boss, t("job_profiles.fields.immediate_boss"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :immediate_boss, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+      </div>
+      <div>
+        <%= f.label :people_in_charge, t("job_profiles.fields.people_in_charge"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :people_in_charge, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+      </div>
+    </div>
+  </fieldset>
+
+  <%# Profile %>
+  <fieldset class="border border-gray-200 rounded-md p-4">
+    <legend class="text-sm font-semibold text-gray-700 px-2"><%= t("job_profiles.form.profile") %></legend>
+    <div class="grid grid-cols-1 gap-4 mt-2">
+      <% [:education, :training, :experience, :authority, :skills, :position_objectives, :hse_objectives, :main_responsibility].each do |field| %>
+        <div>
+          <%= f.label field, t("job_profiles.fields.#{field}"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= f.text_area field, rows: 2, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+        </div>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <%# Functions %>
+  <fieldset class="border border-gray-200 rounded-md p-4">
+    <legend class="text-sm font-semibold text-gray-700 px-2"><%= t("job_profiles.form.functions") %></legend>
+    <div class="grid grid-cols-1 gap-4 mt-2">
+      <div>
+        <%= f.label :own_functions, t("job_profiles.fields.own_functions"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_area :own_functions, rows: 6, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+      </div>
+      <div>
+        <%= f.label :sig_responsibilities, t("job_profiles.fields.sig_responsibilities"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_area :sig_responsibilities, rows: 6, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+      </div>
+    </div>
+  </fieldset>
+
+  <%# Risks %>
+  <fieldset class="border border-gray-200 rounded-md p-4">
+    <legend class="text-sm font-semibold text-gray-700 px-2"><%= t("job_profiles.form.risks") %></legend>
+    <%= render "risks_fields", f: f %>
+  </fieldset>
+
+  <%# Metadata %>
+  <fieldset class="border border-gray-200 rounded-md p-4">
+    <legend class="text-sm font-semibold text-gray-700 px-2"><%= t("job_profiles.form.metadata") %></legend>
+    <div class="grid grid-cols-2 gap-4 mt-2">
+      <div>
+        <%= f.label :elaborated_by, t("job_profiles.fields.elaborated_by"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :elaborated_by, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+      </div>
+      <div>
+        <%= f.label :approved_by, t("job_profiles.fields.approved_by"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :approved_by, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+      </div>
+      <div>
+        <%= f.label :form_code, t("job_profiles.fields.form_code"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :form_code, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+      </div>
+      <div>
+        <%= f.label :form_version, t("job_profiles.fields.form_version"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :form_version, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+      </div>
+      <div>
+        <%= f.label :form_date, t("job_profiles.fields.form_date"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.date_field :form_date, class: "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" %>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="flex items-center gap-3">
+    <%= f.submit t("job_profiles.save"), class: "inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 transition-colors cursor-pointer" %>
+    <%= link_to t("job_profiles.cancel"), company_job_profiles_path(@company), class: "text-sm font-medium text-gray-600 hover:text-gray-800" %>
+  </div>
+<% end %>

@@ -9,6 +9,14 @@ Rails.application.routes.draw do
       post :import_employees
     end
     resources :employees
+    resources :job_profiles do
+      collection do
+        post :import
+        post :assign_to_contracts
+        get :manual_assignments
+        patch :bulk_assign
+      end
+    end
   end
   resources :employees, only: [:index, :show, :edit, :update]
   resources :documents, only: [:index] do

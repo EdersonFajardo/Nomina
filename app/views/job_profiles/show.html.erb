@@ -1,0 +1,113 @@
+<div class="max-w-4xl mx-auto">
+  <div class="mb-6">
+    <%= link_to company_job_profiles_path(@company), class: "inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700" do %>
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+      <%= t("job_profiles.back") %>
+    <% end %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+    <div class="flex items-start justify-between mb-4">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900"><%= @job_profile.name %></h1>
+        <% if @job_profile.code.present? %>
+          <p class="text-sm text-gray-500 mt-1"><%= t("job_profiles.fields.code") %>: <%= @job_profile.code %></p>
+        <% end %>
+      </div>
+      <div class="flex items-center gap-3">
+        <%= link_to t("job_profiles.actions.edit"), edit_company_job_profile_path(@company, @job_profile),
+            class: "inline-flex items-center gap-1 rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-gray-300 hover:bg-gray-50 transition-colors" %>
+        <%= link_to t("job_profiles.actions.delete"), [@company, @job_profile],
+            data: { turbo_method: :delete, turbo_confirm: t("job_profiles.confirm_delete") },
+            class: "inline-flex items-center gap-1 rounded-md bg-red-50 px-3 py-2 text-sm font-medium text-red-700 shadow-sm ring-1 ring-red-200 hover:bg-red-100 transition-colors" %>
+      </div>
+    </div>
+
+    <dl class="grid grid-cols-2 gap-4">
+      <% [:immediate_boss, :people_in_charge].each do |field| %>
+        <div>
+          <dt class="text-sm font-medium text-gray-500"><%= t("job_profiles.fields.#{field}") %></dt>
+          <dd class="mt-1 text-sm text-gray-900 whitespace-pre-line"><%= @job_profile.public_send(field).presence || "-" %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+
+  <%# Profile %>
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+    <h2 class="text-sm font-semibold text-gray-700 mb-4"><%= t("job_profiles.form.profile") %></h2>
+    <dl class="space-y-4">
+      <% [:education, :training, :experience, :authority, :skills, :position_objectives, :hse_objectives, :main_responsibility].each do |field| %>
+        <% value = @job_profile.public_send(field) %>
+        <% next if value.blank? %>
+        <div>
+          <dt class="text-sm font-medium text-gray-500"><%= t("job_profiles.fields.#{field}") %></dt>
+          <dd class="mt-1 text-sm text-gray-900 whitespace-pre-line"><%= value %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+
+  <%# Functions %>
+  <% if @job_profile.own_functions.present? || @job_profile.sig_responsibilities.present? %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <h2 class="text-sm font-semibold text-gray-700 mb-4"><%= t("job_profiles.form.functions") %></h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("job_profiles.fields.own_functions") %></dt>
+          <dd class="text-sm text-gray-900 whitespace-pre-line"><%= @job_profile.own_functions.presence || "-" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("job_profiles.fields.sig_responsibilities") %></dt>
+          <dd class="text-sm text-gray-900 whitespace-pre-line"><%= @job_profile.sig_responsibilities.presence || "-" %></dd>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Risks %>
+  <% if @job_profile.risks.any? %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <h2 class="text-sm font-semibold text-gray-700 mb-4"><%= t("job_profiles.form.risks") %></h2>
+      <% @job_profile.risks.group_by(&:category).each do |category, risks| %>
+        <h4 class="text-xs font-semibold text-gray-600 uppercase tracking-wide mt-4 mb-2">
+          <%= t("job_profiles.risk_categories.#{JobProfileRisk::CATEGORIES[category]}") %>
+        </h4>
+        <table class="min-w-full text-sm">
+          <tbody>
+            <% risks.each do |risk| %>
+              <tr class="border-b border-gray-100">
+                <td class="py-1 text-gray-700"><%= risk.factor %></td>
+                <td class="py-1 text-right">
+                  <% if risk.exposure_level %>
+                    <span class="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-amber-600/20"><%= risk.exposure_label %></span>
+                  <% else %>
+                    <span class="text-xs text-gray-400"><%= t("job_profiles.risk_table.none") %></span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Metadata %>
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <dl class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+      <% [:elaborated_by, :approved_by, :form_code, :form_version].each do |field| %>
+        <div>
+          <dt class="font-medium text-gray-500"><%= t("job_profiles.fields.#{field}") %></dt>
+          <dd class="mt-1 text-gray-900"><%= @job_profile.public_send(field).presence || "-" %></dd>
+        </div>
+      <% end %>
+      <div>
+        <dt class="font-medium text-gray-500"><%= t("job_profiles.fields.form_date") %></dt>
+        <dd class="mt-1 text-gray-900"><%= @job_profile.form_date ? l(@job_profile.form_date, format: :short) : "-" %></dd>
+      </div>
+    </dl>
+  </div>
+</div>

@@ -1,0 +1,124 @@
+<div class="max-w-5xl mx-auto" data-controller="profile-assign">
+  <div class="mb-6">
+    <%= link_to company_job_profiles_path(@company), class: "inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700" do %>
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+      <%= t("job_profiles.back") %>
+    <% end %>
+  </div>
+
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t("job_profiles.manual.title") %></h1>
+    <p class="text-sm text-gray-500 mt-1"><%= t("job_profiles.manual.description") %></p>
+  </div>
+
+  <% if @profiles.empty? %>
+    <div class="rounded-md bg-amber-50 p-4 text-sm text-amber-800 ring-1 ring-amber-200">
+      <%= t("job_profiles.manual.no_profiles") %>
+    </div>
+  <% elsif @contracts.empty? %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+      <svg class="mx-auto h-12 w-12 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900"><%= t("job_profiles.manual.all_assigned_title") %></h3>
+      <p class="mt-1 text-sm text-gray-500"><%= t("job_profiles.manual.all_assigned_description") %></p>
+    </div>
+  <% else %>
+    <%= form_with url: bulk_assign_company_job_profiles_path(@company), method: :patch, data: { turbo: false } do %>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("employees.fields.full_name") %></th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("contracts.fields.position") %></th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("contracts.fields.contract_number") %></th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("job_profiles.manual.assigned_profile") %></th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("job_profiles.fields.actions") %></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <% @contracts.each do |contract| %>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= contract.employee.full_name %></td>
+                <td class="px-6 py-4 text-sm text-gray-600"><%= contract.position.presence || "-" %></td>
+                <td class="px-6 py-4 text-sm text-gray-600"><%= contract.contract_number.presence || t("contracts.no_number") %></td>
+                <td class="px-6 py-4 text-sm">
+                  <%= hidden_field_tag "assignments[#{contract.id}]", "",
+                      data: { profile_assign_target: "input", contract_id: contract.id.to_s } %>
+                  <span data-profile-assign-target="label"
+                        data-contract-id="<%= contract.id %>"
+                        data-empty="<%= t("job_profiles.manual.unassigned") %>"
+                        class="text-xs text-gray-400"><%= t("job_profiles.manual.unassigned") %></span>
+                </td>
+                <td class="px-6 py-4 text-sm text-right">
+                  <%= button_tag type: "button",
+                      data: { action: "profile-assign#open", contract_id: contract.id.to_s, info: render("contract_info", contract: contract) },
+                      class: "inline-flex items-center gap-1 rounded-md bg-white px-3 py-1.5 text-sm font-medium text-indigo-600 shadow-sm ring-1 ring-indigo-200 hover:bg-indigo-50 transition-colors cursor-pointer" do %>
+                    <%= t("job_profiles.manual.link_button") %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-4 flex items-center justify-end">
+        <%= submit_tag t("job_profiles.manual.save_all"),
+            class: "inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 transition-colors cursor-pointer" %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%# Shared modal (native dialog → floats centered in the top layer) %>
+  <dialog data-profile-assign-target="dialog"
+          data-action="click->profile-assign#backdrop"
+          class="m-auto w-[min(32rem,92vw)] rounded-lg shadow-xl p-0 backdrop:bg-gray-900/50">
+    <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+      <h3 class="text-lg font-semibold text-gray-900"><%= t("job_profiles.manual.modal_title") %></h3>
+      <button type="button" data-action="profile-assign#close" class="text-gray-400 hover:text-gray-600 cursor-pointer">
+        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="px-6 py-4 space-y-4">
+      <div data-profile-assign-target="info"></div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"><%= t("job_profiles.manual.select_label") %></label>
+        <input type="text" autocomplete="off"
+               data-profile-assign-target="query"
+               data-action="input->profile-assign#filter"
+               placeholder="<%= t("job_profiles.manual.search_placeholder") %>"
+               class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none" />
+        <ul class="mt-1 max-h-56 overflow-y-auto rounded-md border border-gray-200 divide-y divide-gray-100">
+          <li>
+            <button type="button"
+                    data-action="profile-assign#select"
+                    data-profile-assign-target="option"
+                    data-id="" data-label="<%= t('job_profiles.manual.unassigned') %>" data-name="<%= t('job_profiles.manual.unassigned').downcase %>"
+                    class="w-full text-left px-3 py-2 text-sm text-gray-500 hover:bg-gray-50 cursor-pointer"><%= t("job_profiles.manual.unassigned") %></button>
+          </li>
+          <% @profiles.each do |profile| %>
+            <li>
+              <button type="button"
+                      data-action="profile-assign#select"
+                      data-profile-assign-target="option"
+                      data-id="<%= profile.id %>" data-label="<%= profile.name %>" data-name="<%= profile.name.downcase %>"
+                      class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"><%= profile.name %></button>
+            </li>
+          <% end %>
+        </ul>
+        <p data-profile-assign-target="empty" class="hidden text-xs text-gray-400 mt-1"><%= t("job_profiles.manual.no_results") %></p>
+      </div>
+    </div>
+    <div class="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4">
+      <button type="button" data-action="profile-assign#close"
+              class="text-sm font-medium text-gray-600 hover:text-gray-800 cursor-pointer"><%= t("job_profiles.cancel") %></button>
+      <button type="button" data-action="profile-assign#apply"
+              class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 transition-colors cursor-pointer"><%= t("job_profiles.manual.apply") %></button>
+    </div>
+  </dialog>
+</div>

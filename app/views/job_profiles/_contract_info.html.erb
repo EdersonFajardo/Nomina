@@ -1,0 +1,38 @@
+<dl class="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+  <div class="col-span-2">
+    <dt class="font-medium text-gray-500"><%= t("employees.fields.full_name") %></dt>
+    <dd class="text-gray-900"><%= contract.employee.full_name %></dd>
+  </div>
+  <div>
+    <dt class="font-medium text-gray-500"><%= t("employees.fields.document") %></dt>
+    <dd class="text-gray-900"><%= contract.employee.document_type_label %> <%= contract.employee.document_number %></dd>
+  </div>
+  <div>
+    <dt class="font-medium text-gray-500"><%= t("contracts.fields.contract_number") %></dt>
+    <dd class="text-gray-900"><%= contract.contract_number.presence || t("contracts.no_number") %></dd>
+  </div>
+  <div>
+    <dt class="font-medium text-gray-500"><%= t("contracts.fields.position") %></dt>
+    <dd class="text-gray-900"><%= contract.position.presence || "-" %></dd>
+  </div>
+  <div>
+    <dt class="font-medium text-gray-500"><%= t("contracts.fields.area") %></dt>
+    <dd class="text-gray-900"><%= contract.area.presence || "-" %></dd>
+  </div>
+  <div>
+    <dt class="font-medium text-gray-500"><%= t("contracts.fields.contract_type") %></dt>
+    <dd class="text-gray-900"><%= contract.contract_type_label %></dd>
+  </div>
+  <div>
+    <dt class="font-medium text-gray-500"><%= t("contracts.fields.basic_salary") %></dt>
+    <dd class="text-gray-900"><%= contract.basic_salary ? number_to_currency(contract.basic_salary, unit: "$", precision: 0) : "-" %></dd>
+  </div>
+  <div>
+    <dt class="font-medium text-gray-500"><%= t("contracts.fields.contract_date") %></dt>
+    <dd class="text-gray-900"><%= contract.contract_date ? l(contract.contract_date, format: :short) : "-" %></dd>
+  </div>
+  <div>
+    <dt class="font-medium text-gray-500"><%= t("contracts.fields.contract_end_date") %></dt>
+    <dd class="text-gray-900"><%= contract.contract_end_date ? l(contract.contract_end_date, format: :short) : "-" %></dd>
+  </div>
+</dl>

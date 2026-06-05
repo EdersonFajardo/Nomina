@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_08_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_05_120200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,6 +43,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_120000) do
     t.string "health_entity"
     t.date "hire_date"
     t.boolean "integral_salary", default: false, null: false
+    t.bigint "job_profile_id"
     t.date "pension_date"
     t.string "pension_entity"
     t.string "position"
@@ -52,6 +53,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_120000) do
     t.date "vacation_date"
     t.index ["employee_id", "contract_number"], name: "index_contracts_on_employee_id_and_contract_number", unique: true
     t.index ["employee_id"], name: "index_contracts_on_employee_id"
+    t.index ["job_profile_id"], name: "index_contracts_on_job_profile_id"
   end
 
   create_table "conversion_logs", force: :cascade do |t|
@@ -116,6 +118,45 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_120000) do
     t.index ["company_id"], name: "index_employees_on_company_id"
   end
 
+  create_table "job_profile_risks", force: :cascade do |t|
+    t.integer "category", null: false
+    t.datetime "created_at", null: false
+    t.integer "exposure_level"
+    t.string "factor", null: false
+    t.bigint "job_profile_id", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_profile_id", "position"], name: "index_job_profile_risks_on_job_profile_id_and_position"
+    t.index ["job_profile_id"], name: "index_job_profile_risks_on_job_profile_id"
+  end
+
+  create_table "job_profiles", force: :cascade do |t|
+    t.string "approved_by"
+    t.text "authority"
+    t.string "code"
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.text "education"
+    t.string "elaborated_by"
+    t.text "experience"
+    t.string "form_code", default: "RH-F-14"
+    t.date "form_date"
+    t.string "form_version"
+    t.text "hse_objectives"
+    t.string "immediate_boss"
+    t.text "main_responsibility"
+    t.string "name", null: false
+    t.text "own_functions"
+    t.string "people_in_charge"
+    t.text "position_objectives"
+    t.text "sig_responsibilities"
+    t.text "skills"
+    t.text "training"
+    t.datetime "updated_at", null: false
+    t.index ["company_id", "name"], name: "index_job_profiles_on_company_id_and_name", unique: true
+    t.index ["company_id"], name: "index_job_profiles_on_company_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
@@ -129,9 +170,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_120000) do
   end
 
   add_foreign_key "contracts", "employees"
+  add_foreign_key "contracts", "job_profiles"
   add_foreign_key "conversion_logs", "companies"
   add_foreign_key "conversion_logs", "users"
   add_foreign_key "documents", "users"
   add_foreign_key "email_accounts", "users"
   add_foreign_key "employees", "companies"
+  add_foreign_key "job_profile_risks", "job_profiles"
+  add_foreign_key "job_profiles", "companies"
 end

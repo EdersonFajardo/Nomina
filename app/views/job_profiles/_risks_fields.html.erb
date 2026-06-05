@@ -1,0 +1,22 @@
+<div class="mt-2 space-y-2">
+  <% current_category = nil %>
+  <%= f.fields_for :risks do |rf| %>
+    <% category = rf.object.category %>
+    <% if category != current_category %>
+      <% current_category = category %>
+      <h4 class="text-xs font-semibold text-gray-600 uppercase tracking-wide mt-4 mb-1">
+        <%= t("job_profiles.risk_categories.#{JobProfileRisk::CATEGORIES[category]}") %>
+      </h4>
+    <% end %>
+    <div class="flex items-center gap-3">
+      <%= rf.hidden_field :category %>
+      <%= rf.hidden_field :factor %>
+      <%= rf.hidden_field :position %>
+      <span class="flex-1 text-sm text-gray-700"><%= rf.object.factor %></span>
+      <%= rf.select :exposure_level,
+          JobProfileRisk::EXPOSURE_LEVELS.map { |k, v| [v, k] },
+          { include_blank: t("job_profiles.risk_table.none") },
+          class: "rounded-md border border-gray-300 px-2 py-1 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none bg-white w-40" %>
+    </div>
+  <% end %>
+</div>

@@ -196,6 +196,7 @@ es:
       edit: "Editar"
       delete: "Eliminar"
       view: "Ver"
+      export_pdf: "Exportar PDF"
     empty:
       title: "Sin perfiles de cargo"
       description: "Cree un perfil manualmente o importe el archivo de perfiles de cargo."

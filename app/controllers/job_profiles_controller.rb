@@ -13,6 +13,15 @@ class JobProfilesController < ApplicationController
                              .joins(:employee)
                              .includes(:employee)
                              .order("employees.first_surname, employees.first_name")
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        exporter = JobProfiles::PdfExporter.new(@company, @job_profile)
+        send_data exporter.render, filename: exporter.filename,
+                  type: "application/pdf", disposition: "inline"
+      end
+    end
   end
 
   def new

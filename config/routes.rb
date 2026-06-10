@@ -5,6 +5,9 @@ Rails.application.routes.draw do
 
   resources :users, except: [:show]
   resources :companies do
+    collection do
+      get :summary
+    end
     member do
       post :import_employees
     end

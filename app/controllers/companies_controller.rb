@@ -6,6 +6,13 @@ class CompaniesController < ApplicationController
     @companies = Company.order(:name)
   end
 
+  def summary
+    companies = Company.order(:name).includes(:employees)
+    exporter = Companies::SummaryPdfExporter.new(companies)
+    send_data exporter.render, filename: exporter.filename,
+              type: "application/pdf", disposition: "inline"
+  end
+
   def show
     employees = @company.employees.includes(:contracts)
 

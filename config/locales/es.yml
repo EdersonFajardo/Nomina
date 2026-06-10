@@ -3,6 +3,50 @@ es:
     formats:
       short: "%d/%m/%Y"
       long: "%d de %B de %Y"
+    month_names:
+      - ~
+      - Enero
+      - Febrero
+      - Marzo
+      - Abril
+      - Mayo
+      - Junio
+      - Julio
+      - Agosto
+      - Septiembre
+      - Octubre
+      - Noviembre
+      - Diciembre
+    abbr_month_names:
+      - ~
+      - Ene
+      - Feb
+      - Mar
+      - Abr
+      - May
+      - Jun
+      - Jul
+      - Ago
+      - Sep
+      - Oct
+      - Nov
+      - Dic
+    day_names:
+      - Domingo
+      - Lunes
+      - Martes
+      - Miercoles
+      - Jueves
+      - Viernes
+      - Sabado
+    abbr_day_names:
+      - Dom
+      - Lun
+      - Mar
+      - Mie
+      - Jue
+      - Vie
+      - Sab
   time:
     formats:
       short: "%d/%m/%Y %H:%M"
@@ -96,6 +140,17 @@ es:
     new_title: "Nueva Empresa"
     edit_title: "Editar Empresa"
     new_button: "Nueva Empresa"
+    summary_export:
+      button: "Imprimir resumen empresas"
+      title: "Resumen de Empresas"
+      generated_at: "Generado el"
+      active_count: "Empleados activos"
+      no_active: "Sin empleados activos."
+      employee_name: "Nombre"
+      employee_document: "Cedula"
+      employee_phone: "Telefono"
+      employee_email: "Correo"
+      not_available: "No registrado"
     back: "Volver a empresas"
     cancel: "Cancelar"
     created: "Empresa creada exitosamente."
